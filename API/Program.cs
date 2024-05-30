@@ -48,6 +48,20 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapControllers();
 
+var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var storeContext = services.GetRequiredService<StoreContext>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+
+try
+{
+    await storeContext.Database.MigrateAsync();
+}
+catch (System.Exception)
+{
+    logger.LogError("Something went wrong, you need to review the application");
+}
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string Summary)
