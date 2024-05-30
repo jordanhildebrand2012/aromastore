@@ -6,38 +6,35 @@ namespace Infrastructure.Data
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly StoreContext _context;
-        public ProductRepository(StoreContext context)
+        private readonly IGenericRepository<Product> _productRepo;
+        private readonly IGenericRepository<ProductBrand> _productBrandRepo;
+        private readonly IGenericRepository<ProductType> _productTypeRepo;
+        public ProductRepository(
+            IGenericRepository<Product> productRepo, IGenericRepository<ProductBrand> productBrandRepo, IGenericRepository<ProductType> productTypeRepo)
         {
-            _context = context;
+            _productRepo = productRepo;
+            _productBrandRepo = productBrandRepo;
+            _productTypeRepo = productTypeRepo;
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context
-                .Products
-                .Include(b => b.ProductBrand)
-                .Include(t => t.ProductType)
-                .SingleOrDefaultAsync(p => p.id == id);
+            return await _productRepo.GetByIdAsync(id);
         }
 
         public async Task<IReadOnlyList<Product>> GetProductsAsync()
         {
-            return await _context
-                .Products
-                .Include(b => b.ProductBrand)
-                .Include(t => t.ProductType)
-                .ToListAsync();
+            return await _productRepo.ListsAllAsync();
         }
 
         public async Task<IReadOnlyList<ProductBrand>> GetProductsBrandAsync()
         {
-            return await _context.ProductBrand.ToListAsync();
+            return await _productBrandRepo.ListsAllAsync();
         }
 
         public async Task<IReadOnlyList<ProductType>> GetProductsTypeAsync()
         {
-            return await _context.ProductType.ToListAsync();
+            return await _productTypeRepo.ListsAllAsync();
         }
     }
 }
