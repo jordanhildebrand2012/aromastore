@@ -48,6 +48,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.UseStaticFiles();
+
 app.MapControllers();
 
 var scope = app.Services.CreateScope();
