@@ -1,4 +1,4 @@
-using API.Controllers.Middleware;
+using API.Middleware;
 using API.Errors;
 using Core.Interfaces;
 using Infrastructure.Data;
