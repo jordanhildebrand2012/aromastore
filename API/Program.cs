@@ -1,42 +1,15 @@
+using API.Extensions;
 using API.Middleware;
-using API.Errors;
-using Core.Interfaces;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddApplicationServices(builder.Configuration);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddDbContext<StoreContext>(opts =>
-{
-    opts.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnnection"));
-});
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.InvalidModelStateResponseFactory = actionContext =>
-    {
-        var errors = actionContext.ModelState
-                        .Where(e => e.Value.Errors.Count > 0)
-                        .SelectMany(e => e.Value.Errors)
-                        .Select(e => e.ErrorMessage).ToArray();
-
-        var errorResponse = new ApiValidationError
-        {
-            Errors = errors
-        };
-
-        return new BadRequestObjectResult(errorResponse);
-    };
-});
 
 var app = builder.Build();
 
