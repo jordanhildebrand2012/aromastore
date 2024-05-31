@@ -13,8 +13,9 @@ namespace API.Helpers
         public MappingProfiles()
         {
             CreateMap<Product, ProductToReturnDto>()
-                .ForMember(t => t.ProductType, o => o.MapFrom(n => n.ProductType.Name))
-                .ForMember(b => b.ProductBrand, o => o.MapFrom(n => n.ProductBrand.Name));
+                .ForMember(d => d.ProductType, o => o.MapFrom(n => n.ProductType.Name))
+                .ForMember(d => d.ProductBrand, o => o.MapFrom(n => n.ProductBrand.Name))
+                .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductUrlResolver>());
         }
     }
 }
