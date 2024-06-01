@@ -46,6 +46,8 @@ app.MapGet("/weatherforecast", () =>
 
 app.UseStaticFiles();
 
+app.UseCors("CorsPolicy");
+
 app.MapControllers();
 
 var scope = app.Services.CreateScope();
